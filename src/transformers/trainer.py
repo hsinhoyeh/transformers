@@ -2348,6 +2348,9 @@ class Trainer:
 
         total_batched_samples = 0
         for epoch in range(epochs_trained, num_train_epochs):
+            epo_start = time.Time()
+
+            logger.info(f"epoch{epoch} timing is up")
             epoch_iterator = train_dataloader
             if hasattr(epoch_iterator, "set_epoch"):
                 epoch_iterator.set_epoch(epoch)
@@ -2398,6 +2401,7 @@ class Trainer:
                             .cpu()
                             .item()
                         )
+                        logger.info("training.state.inputtokens: {self.state.num_input_tokens_seen}")
                 if rng_to_sync:
                     self._load_rng_state(resume_from_checkpoint)
                     rng_to_sync = False
@@ -2418,7 +2422,9 @@ class Trainer:
                     self.control = self.callback_handler.on_step_begin(args, self.state, self.control)
 
                 with self.accelerator.accumulate(model):
+                    training_step_time = time.Time()
                     tr_loss_step = self.training_step(model, inputs)
+                    logging.info("training_step cost: {}".format(round(time.Time() - tr_loss_step)))
 
                 if (
                     args.logging_nan_inf_filter
@@ -2530,6 +2536,9 @@ class Trainer:
                     )
             if self.control.should_training_stop:
                 break
+
+            epo_end= time.Time()
+            logger.info("{epoch} cost: {}", round(epo_end - epo_start), 4)
 
         if args.past_index and hasattr(self, "_past"):
             # Clean the state at the end of training
