@@ -2380,6 +2380,7 @@ class Trainer:
 
             step = -1
             for step, inputs in enumerate(epoch_iterator):
+                logger.info("epoch step: {step}")
                 total_batched_samples += 1
 
                 if self.args.include_num_input_tokens_seen:
@@ -2422,10 +2423,10 @@ class Trainer:
                 if step % args.gradient_accumulation_steps == 0:
                     self.control = self.callback_handler.on_step_begin(args, self.state, self.control)
 
+                training_step_time = time.time()
                 with self.accelerator.accumulate(model):
-                    training_step_time = time.time()
                     tr_loss_step = self.training_step(model, inputs)
-                    logger.info("training_step cost: {}".format(round(time.time() - training_step_time)))
+               logger.info("training_step cost: {}".format(round(time.time() - training_step_time)))
 
                 if (
                     args.logging_nan_inf_filter
@@ -2515,6 +2516,7 @@ class Trainer:
                     if is_torch_xla_available():
                         xm.mark_step()
                     break
+            # for step, inputs in enumerate(epoch_iterator)
             if step < 0:
                 logger.warning(
                     "There seems not to be a single sample in your epoch_iterator, stopping training at step"
@@ -3564,7 +3566,11 @@ class Trainer:
             with amp.scale_loss(loss, self.optimizer) as scaled_loss:
                 scaled_loss.backward()
         else:
+            logger.info("accelerator.backward")
+            t1 = time.time()
             self.accelerator.backward(loss, **kwargs)
+            t2 = time.time()
+            logger.info("accelerator.backward, cost:{}".format(round(t2 - t1)))
 
         return loss.detach() / self.args.gradient_accumulation_steps
 
@@ -3574,6 +3580,8 @@ class Trainer:
 
         Subclass and override for custom behavior.
         """
+        t1 = time.time()
+        logger.info(f"compute loss func, device:{}".format(model.device))
         if self.label_smoother is not None and "labels" in inputs:
             labels = inputs.pop("labels")
         else:
@@ -3603,6 +3611,8 @@ class Trainer:
             # We don't use .loss here since the model may return tuples instead of ModelOutput.
             loss = outputs["loss"] if isinstance(outputs, dict) else outputs[0]
 
+        t2 = time.time()
+        logger.info(f"compute loss func cost: {}".format(round(t2- t1)))
         return (loss, outputs) if return_outputs else loss
 
     def is_local_process_zero(self) -> bool:
