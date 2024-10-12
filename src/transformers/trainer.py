@@ -2004,6 +2004,7 @@ class Trainer:
             kwargs (`Dict[str, Any]`, *optional*):
                 Additional keyword arguments used to hide deprecated arguments
         """
+        logger.info(f"go inside train process")
         if resume_from_checkpoint is False:
             resume_from_checkpoint = None
 
@@ -2348,7 +2349,7 @@ class Trainer:
 
         total_batched_samples = 0
         for epoch in range(epochs_trained, num_train_epochs):
-            epo_start = time.Time()
+            epo_start = time.time()
 
             logger.info(f"epoch{epoch} timing is up")
             epoch_iterator = train_dataloader
@@ -2422,9 +2423,9 @@ class Trainer:
                     self.control = self.callback_handler.on_step_begin(args, self.state, self.control)
 
                 with self.accelerator.accumulate(model):
-                    training_step_time = time.Time()
+                    training_step_time = time.time()
                     tr_loss_step = self.training_step(model, inputs)
-                    logging.info("training_step cost: {}".format(round(time.Time() - tr_loss_step)))
+                    logging.info("training_step cost: {}".format(round(time.time() - tr_loss_step)))
 
                 if (
                     args.logging_nan_inf_filter
@@ -2537,7 +2538,7 @@ class Trainer:
             if self.control.should_training_stop:
                 break
 
-            epo_end= time.Time()
+            epo_end= time.time()
             logger.info("{epoch} cost: {}", round(epo_end - epo_start), 4)
 
         if args.past_index and hasattr(self, "_past"):
