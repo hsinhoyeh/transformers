@@ -2448,6 +2448,7 @@ class Trainer:
                     steps_in_epoch <= args.gradient_accumulation_steps and (step + 1) == steps_in_epoch
                 )
 
+                block_time1 = time.time()
                 if (
                     total_batched_samples % args.gradient_accumulation_steps == 0
                     or
@@ -2509,6 +2510,8 @@ class Trainer:
                 else:
                     self.control = self.callback_handler.on_substep_end(args, self.state, self.control)
 
+                block_time2 = time.time()
+                logger.info(f"This block costs {round(block_time2 - block_time1)}")
                 if self.control.should_epoch_stop or self.control.should_training_stop:
                     # PyTorch/XLA relies on the data loader to insert the mark_step for
                     # each step. Since we are breaking the loop early, we need to manually
@@ -2525,8 +2528,11 @@ class Trainer:
                 )
                 self.control.should_training_stop = True
 
+            epoch_end_t1 = time.time()
             self.control = self.callback_handler.on_epoch_end(args, self.state, self.control)
             self._maybe_log_save_evaluate(tr_loss, grad_norm, model, trial, epoch, ignore_keys_for_eval)
+            epoch_end_t2 = time.time()
+            logger.info("on epoch end, cost: {round(epoch_end_t2 - epoch_end_t1)}")
 
             if DebugOption.TPU_METRICS_DEBUG in self.args.debug:
                 if is_torch_xla_available():
