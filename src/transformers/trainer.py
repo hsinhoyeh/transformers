@@ -3581,7 +3581,7 @@ class Trainer:
         Subclass and override for custom behavior.
         """
         t1 = time.time()
-        logger.info(f"compute loss func, device:{}".format(model.device))
+        logger.info(f"compute loss func, device:{model.device}")
         if self.label_smoother is not None and "labels" in inputs:
             labels = inputs.pop("labels")
         else:
@@ -3612,7 +3612,7 @@ class Trainer:
             loss = outputs["loss"] if isinstance(outputs, dict) else outputs[0]
 
         t2 = time.time()
-        logger.info(f"compute loss func cost: {}".format(round(t2- t1)))
+        logger.info(f"compute loss func cost: {round(t2 - t1)}")
         return (loss, outputs) if return_outputs else loss
 
     def is_local_process_zero(self) -> bool:
