@@ -2381,7 +2381,7 @@ class Trainer:
             step = -1
             for step, inputs in enumerate(epoch_iterator):
                 logger.info(f"epoch step: {step}")
-                logger.info(f" inputs: {inputs.device} {inputs.size}")
+                logger.info(f" inputs: {inputs.size}")
                 total_batched_samples += 1
 
                 if self.args.include_num_input_tokens_seen:

@@ -75,10 +75,12 @@ class BatchFeature(UserDict):
     """
 
     def __init__(self, data: Optional[Dict[str, Any]] = None, tensor_type: Union[None, str, TensorType] = None):
+        logger.info(f"batchfeature is called, data: {data}")
         super().__init__(data)
         self.convert_to_tensors(tensor_type=tensor_type)
 
     def __getitem__(self, item: str) -> Union[Any]:
+        logger.info("batchfeature.getitem is called")
         """
         If the key is a string, returns the value of the dict associated to `key` ('input_values', 'attention_mask',
         etc.).
@@ -89,6 +91,7 @@ class BatchFeature(UserDict):
             raise KeyError("Indexing with integers is not available when using Python based feature extractors")
 
     def __getattr__(self, item: str):
+        logger.info("batchfeature.getattri is called")
         try:
             return self.data[item]
         except KeyError:
@@ -103,17 +106,22 @@ class BatchFeature(UserDict):
 
     # Copied from transformers.tokenization_utils_base.BatchEncoding.keys
     def keys(self):
+        logger.info("batchfeature.keys is called")
         return self.data.keys()
 
     # Copied from transformers.tokenization_utils_base.BatchEncoding.values
     def values(self):
+        logger.info("batchfeature.values is called")
         return self.data.values()
 
     # Copied from transformers.tokenization_utils_base.BatchEncoding.items
     def items(self):
+        logger.info("batchfeature.items is called")
+        try:
         return self.data.items()
 
     def _get_is_as_tensor_fns(self, tensor_type: Optional[Union[str, TensorType]] = None):
+        logger.info("batchfeature._get_is_as_tensor_fns is called")
         if tensor_type is None:
             return None, None
 
@@ -181,6 +189,8 @@ class BatchFeature(UserDict):
                 The type of tensors to use. If `str`, should be one of the values of the enum [`~utils.TensorType`]. If
                 `None`, no modification is done.
         """
+
+        logger.info("batchfeature.convert_to_tensors is called")
         if tensor_type is None:
             return self
 
