@@ -117,7 +117,6 @@ class BatchFeature(UserDict):
     # Copied from transformers.tokenization_utils_base.BatchEncoding.items
     def items(self):
         logger.info("batchfeature.items is called")
-        try:
         return self.data.items()
 
     def _get_is_as_tensor_fns(self, tensor_type: Optional[Union[str, TensorType]] = None):
