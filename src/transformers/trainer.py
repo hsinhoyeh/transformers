@@ -2519,6 +2519,8 @@ class Trainer:
                     if is_torch_xla_available():
                         xm.mark_step()
                     break
+                block_time3 = time.time()
+                logger.info(f"This block2 costs {round(block_time3 - block_time2)}")
             # for step, inputs in enumerate(epoch_iterator)
             if step < 0:
                 logger.warning(
