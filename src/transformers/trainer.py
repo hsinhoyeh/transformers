@@ -2425,7 +2425,7 @@ class Trainer:
                 with self.accelerator.accumulate(model):
                     training_step_time = time.time()
                     tr_loss_step = self.training_step(model, inputs)
-                    logger.info("training_step cost: {}".format(round(time.time() - tr_loss_step)))
+                    logger.info("training_step cost: {}".format(round(time.time() - training_step_time)))
 
                 if (
                     args.logging_nan_inf_filter
