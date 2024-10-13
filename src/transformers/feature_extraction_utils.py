@@ -117,7 +117,6 @@ class BatchFeature(UserDict):
 
     # Copied from transformers.tokenization_utils_base.BatchEncoding.items
     def items(self):
-        raise Exception("dig me")
         logger.info("batchfeature.items is called")
         return self.data.items()
 

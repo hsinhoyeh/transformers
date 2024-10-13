@@ -122,6 +122,7 @@ class SequenceFeatureExtractor(FeatureExtractionMixin):
                 - `'pt'`: Return PyTorch `torch.Tensor` objects.
                 - `'np'`: Return Numpy `np.ndarray` objects.
         """
+        t0 = time.time()
         # If we have a list of dicts, let's convert it in a dict of lists
         # We do this to allow using this method as a collate_fn function in PyTorch Dataloader
         if isinstance(processed_features, (list, tuple)) and isinstance(processed_features[0], (dict, BatchFeature)):
@@ -226,7 +227,8 @@ class SequenceFeatureExtractor(FeatureExtractionMixin):
                 batch_outputs[key].append(value)
 
         t2 = time.time()
-        logger.info(f"featureextraction.pad: timed {round(t2 - t1)}")
+        logger.info(f"featureextraction.pad: timed1 {round(t1 - t0)}")
+        logger.info(f"featureextraction.pad: timed2 {round(t2 - t1)}")
         return BatchFeature(batch_outputs, tensor_type=return_tensors)
 
     def _pad(
