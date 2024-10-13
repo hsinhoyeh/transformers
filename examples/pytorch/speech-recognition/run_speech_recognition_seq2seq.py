@@ -20,6 +20,7 @@ Fine-tuning the library models for sequence to sequence speech recognition.
 # recognition task. Pointers for this are left as comments.
 
 import logging
+import time
 import os
 import sys
 from dataclasses import dataclass, field
@@ -248,7 +249,7 @@ class DataCollatorSpeechSeq2SeqWithPadding:
     forward_attention_mask: bool
 
     def __call__(self, features: List[Dict[str, Union[List[int], torch.Tensor]]]) -> Dict[str, torch.Tensor]:
-        logger.info("DataCollatorSpeechSeq2SeqWithPadding.__call__ is called")
+        logger.info("DataCollatorSpeechSeq2SeqWithPadding.__call__ is called {time.time()}")
         # split inputs and labels since they have to be of different lengths and need
         # different padding methods
         model_input_name = self.processor.model_input_names[0]
@@ -272,6 +273,7 @@ class DataCollatorSpeechSeq2SeqWithPadding:
 
         batch["labels"] = labels
 
+        logger.info("DataCollatorSpeechSeq2SeqWithPadding.__call__ is leaved {time.time()}")
         return batch
 
 
