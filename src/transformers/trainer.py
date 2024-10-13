@@ -932,6 +932,7 @@ class Trainer:
 
         Subclass and override this method if you want to inject some custom behavior.
         """
+        logger.info("trainer.get_train_dataloader")
         if self.train_dataset is None:
             raise ValueError("Trainer: training requires a train_dataset.")
 
@@ -1073,7 +1074,11 @@ class Trainer:
             dataloader_params["prefetch_factor"] = self.args.dataloader_prefetch_factor
 
         # We use the same batch_size as for eval.
-        return self.accelerator.prepare(DataLoader(test_dataset, **dataloader_params))
+        t1 = time.time()
+        ret = self.accelerator.prepare(DataLoader(test_dataset, **dataloader_params))
+        t2 = time.time()
+        logger.info('acceleator.prepare.dataset cost {round(t2 - t1)}')
+        return ret
 
     def create_optimizer_and_scheduler(self, num_training_steps: int):
         """

@@ -205,6 +205,8 @@ class SequenceFeatureExtractor(FeatureExtractionMixin):
             padding_strategy = PaddingStrategy.MAX_LENGTH
 
         batch_outputs = {}
+        logger.info(f"featureextraction.pad: batchsize: {batch_size}")
+        t1 = time.time()
         for i in range(batch_size):
             # padding
             outputs = self._pad(
@@ -222,6 +224,8 @@ class SequenceFeatureExtractor(FeatureExtractionMixin):
                     value = value.astype(np.float32)
                 batch_outputs[key].append(value)
 
+        t2 = time.time()
+        logger.info(f"featureextraction.pad: timed {round(t2 - t1)}")
         return BatchFeature(batch_outputs, tensor_type=return_tensors)
 
     def _pad(

@@ -24,6 +24,7 @@ from collections import UserDict
 from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, Union
 
 import numpy as np
+import time
 
 from .dynamic_module_utils import custom_object_save
 from .utils import (
@@ -78,7 +79,6 @@ class BatchFeature(UserDict):
         logger.info(f"batchfeature is called, data: {data}")
         super().__init__(data)
         self.convert_to_tensors(tensor_type=tensor_type)
-        raise Exception("dig me")
 
     def __getitem__(self, item: str) -> Union[Any]:
         logger.info("batchfeature.getitem is called")
