@@ -2382,10 +2382,12 @@ class Trainer:
             rng_to_sync = False
             steps_skipped = 0
             if steps_trained_in_current_epoch > 0:
+                logger.info("on epoch skipped first batch..")
                 epoch_iterator = skip_first_batches(epoch_iterator, steps_trained_in_current_epoch)
                 steps_skipped = steps_trained_in_current_epoch
                 steps_trained_in_current_epoch = 0
                 rng_to_sync = True
+            logger.info("on epoch iterate steps..")
 
             step = -1
             for step, inputs in enumerate(epoch_iterator):
