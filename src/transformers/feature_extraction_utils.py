@@ -76,7 +76,6 @@ class BatchFeature(UserDict):
 
     def __init__(self, data: Optional[Dict[str, Any]] = None, tensor_type: Union[None, str, TensorType] = None):
         logger.info(f"batchfeature is called, data: {data}")
-        logger.info(f"batchfeature is called, data.size: {data['input_features'].size}")
         super().__init__(data)
         self.convert_to_tensors(tensor_type=tensor_type)
         raise Exception("dig me")
