@@ -957,7 +957,11 @@ class Trainer:
             dataloader_params["worker_init_fn"] = seed_worker
             dataloader_params["prefetch_factor"] = self.args.dataloader_prefetch_factor
 
-        return self.accelerator.prepare(DataLoader(train_dataset, **dataloader_params))
+        logger.info('trainer.get_train_dataloader.prepare is called')
+        ret = self.accelerator.prepare(DataLoader(train_dataset, **dataloader_params))
+        logger.info('trainer.get_train_dataloader.prepare called')
+
+        return ret
 
     def _get_eval_sampler(self, eval_dataset: Dataset) -> Optional[torch.utils.data.Sampler]:
         # Deprecated code
