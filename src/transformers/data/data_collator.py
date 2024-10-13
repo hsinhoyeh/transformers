@@ -54,6 +54,7 @@ def pad_without_fast_tokenizer_warning(tokenizer, *pad_args, **pad_kwargs):
     Pads without triggering the warning about how using the pad function is sub-optimal when using a fast tokenizer.
     """
 
+    logger.info("pad_without_fast_tokenizer_warning is called")
     # To avoid errors when using Feature extractors
     if not hasattr(tokenizer, "deprecation_warnings"):
         return tokenizer.pad(*pad_args, **pad_kwargs)
@@ -268,6 +269,7 @@ class DataCollatorWithPadding:
     return_tensors: str = "pt"
 
     def __call__(self, features: List[Dict[str, Any]]) -> Dict[str, Any]:
+        logger.info("DataCollatorWithPadding.__init__ is called")
         batch = pad_without_fast_tokenizer_warning(
             self.tokenizer,
             features,
@@ -282,6 +284,7 @@ class DataCollatorWithPadding:
         if "label_ids" in batch:
             batch["labels"] = batch["label_ids"]
             del batch["label_ids"]
+        logger.info("DataCollatorWithPadding.__init__ is leaved")
         return batch
 
 
@@ -501,6 +504,9 @@ def _tf_collate_batch(examples, tokenizer, pad_to_multiple_of: Optional[int] = N
 
 def _numpy_collate_batch(examples, tokenizer, pad_to_multiple_of: Optional[int] = None):
     """Collate `examples` into a batch, using the information in `tokenizer` for padding if necessary."""
+
+    logger.info("_numpy_collate_batch is called")
+
     # Tensorize if necessary.
     if isinstance(examples[0], (list, tuple)):
         examples = [np.array(e, dtype=np.int64) for e in examples]
@@ -528,6 +534,8 @@ def _numpy_collate_batch(examples, tokenizer, pad_to_multiple_of: Optional[int] 
             result[i, : example.shape[0]] = example
         else:
             result[i, -example.shape[0] :] = example
+
+    logger.info("_numpy_collate_batch is leaved")
     return result
 
 

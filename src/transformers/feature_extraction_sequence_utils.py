@@ -50,6 +50,7 @@ class SequenceFeatureExtractor(FeatureExtractionMixin):
         self.return_attention_mask = kwargs.pop("return_attention_mask", True)
 
         super().__init__(**kwargs)
+        logger.info(f"featureextraction.__init__ is called")
 
     def pad(
         self,
@@ -123,6 +124,7 @@ class SequenceFeatureExtractor(FeatureExtractionMixin):
                 - `'np'`: Return Numpy `np.ndarray` objects.
         """
         t0 = time.time()
+        logger.info(f"featureextraction.pad is called")
         # If we have a list of dicts, let's convert it in a dict of lists
         # We do this to allow using this method as a collate_fn function in PyTorch Dataloader
         if isinstance(processed_features, (list, tuple)) and isinstance(processed_features[0], (dict, BatchFeature)):
