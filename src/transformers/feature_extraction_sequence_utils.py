@@ -19,6 +19,7 @@ Sequence feature extraction class for common feature extractors to preprocess se
 from typing import Dict, List, Optional, Union
 
 import numpy as np
+import time
 
 from .feature_extraction_utils import BatchFeature, FeatureExtractionMixin
 from .utils import PaddingStrategy, TensorType, is_tf_tensor, is_torch_tensor, logging, to_numpy
