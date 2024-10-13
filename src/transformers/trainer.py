@@ -2365,10 +2365,14 @@ class Trainer:
                 if len_dataloader is not None
                 else args.max_steps * args.gradient_accumulation_steps
             )
+            logger.info("on epoch begin callback is on")
             self.control = self.callback_handler.on_epoch_begin(args, self.state, self.control)
+            logger.info("on epoch begin callback is off")
 
             if epoch == epochs_trained and resume_from_checkpoint is not None and steps_trained_in_current_epoch == 0:
+                logger.info("load rng state")
                 self._load_rng_state(resume_from_checkpoint)
+                logger.info("load rng state done")
 
             rng_to_sync = False
             steps_skipped = 0

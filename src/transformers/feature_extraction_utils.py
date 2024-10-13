@@ -76,8 +76,10 @@ class BatchFeature(UserDict):
 
     def __init__(self, data: Optional[Dict[str, Any]] = None, tensor_type: Union[None, str, TensorType] = None):
         logger.info(f"batchfeature is called, data: {data}")
+        logger.info(f"batchfeature is called, data.size: {data['input_features'].size}")
         super().__init__(data)
         self.convert_to_tensors(tensor_type=tensor_type)
+        raise Exception("dig me")
 
     def __getitem__(self, item: str) -> Union[Any]:
         logger.info("batchfeature.getitem is called")
@@ -116,6 +118,7 @@ class BatchFeature(UserDict):
 
     # Copied from transformers.tokenization_utils_base.BatchEncoding.items
     def items(self):
+        raise Exception("dig me")
         logger.info("batchfeature.items is called")
         return self.data.items()
 
