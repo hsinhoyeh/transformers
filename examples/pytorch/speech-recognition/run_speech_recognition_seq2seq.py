@@ -507,6 +507,7 @@ def main():
             num_proc=data_args.preprocessing_num_workers,
             desc="preprocess train dataset",
         )
+    logger.info(f"vectorized dataset.type: {type(vectorized_datasets)}")
 
     # filter data that is shorter than min_input_length or longer than
     # max_input_length
