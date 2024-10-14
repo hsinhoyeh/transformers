@@ -902,6 +902,7 @@ class Trainer:
 
         # Build the sampler.
         if self.args.group_by_length:
+            logger.info("trainer.LengthGroupedSampler is called")
             if is_datasets_available() and isinstance(self.train_dataset, datasets.Dataset):
                 lengths = (
                     self.train_dataset[self.args.length_column_name]
@@ -921,6 +922,7 @@ class Trainer:
             )
 
         else:
+            logger.info("trainer.RandomSampler is called")
             return RandomSampler(self.train_dataset)
 
     def get_train_dataloader(self) -> DataLoader:
@@ -2395,6 +2397,7 @@ class Trainer:
 
             step = -1
             for step, inputs in enumerate(epoch_iterator):
+                # TODO: split points
                 logger.info(f"epoch step: {step}")
                 logger.info(f" inputs: {inputs}")
                 total_batched_samples += 1
@@ -2440,6 +2443,7 @@ class Trainer:
                     self.control = self.callback_handler.on_step_begin(args, self.state, self.control)
 
                 training_step_time = time.time()
+                # TODO: split point
                 with self.accelerator.accumulate(model):
                     tr_loss_step = self.training_step(model, inputs)
                 logger.info("training_step cost: {}".format(round(time.time() - training_step_time)))
